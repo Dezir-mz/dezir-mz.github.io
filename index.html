@@ -242,7 +242,7 @@ const galeria = (p,i,id) => { const sl = slidesDe(p), n = sl.length;
 
 const capa = p => p.capa || (p.fotos && p.fotos[0]) || "";
 const card = (p,i) => `<article class="card" data-open="${i}"><div class="pic cover">${capa(p) ? `<img src="${esc(capa(p))}" alt="${esc(p.nome)}" loading="lazy">` : svg((p.cores||["#d9cfc6"])[0])}${(p.fotos||[]).length>1 ? `<span class="count">${p.fotos.length} fotos</span>` : ""}</div>
-  <h3>${esc(p.nome)}</h3><span class="price">${mt(p.preco)}</span><small style="color:var(--gold);font-weight:600">Kit de 6 peças</small>
+  <h3>${esc(p.nome)}</h3><span class="price">${mt(p.preco)}</span><small style="color:var(--gold);font-weight:600">Kit de 6 peças · cores variadas</small>
   ${p.descricao ? `<p class="desc">${esc(p.descricao)}</p>` : ""}
   <div class="qs">${tams(p).map(t => `<button type="button" class="qsz${tams(p).length===1?" on":""}" data-qs="${i}" data-t="${esc(t)}">${esc(t)}</button>`).join("")}</div>
   <div class="act" id="act${i}"></div></article>`;
@@ -251,7 +251,7 @@ const renderAct = i => {
   const el = $("act"+i); if (!el) return;
   const p = PECAS[i], t = qsel[i] ?? (tams(p).length===1 ? tams(p)[0] : ""), k = i + "-" + t + "-un", q = t && pedido[k] ? pedido[k].q : 0;
   el.innerHTML = q
-    ? `<div class="step"><button type="button" data-sd="${i}" aria-label="${q===1?"Remover":"Menos"}">${q===1 ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>' : "−"}</button><span>${q} no carrinho</span><button type="button" data-su="${i}" aria-label="Mais">+</button></div>`
+    ? `<div class="step"><button type="button" data-sd="${i}" aria-label="${q===1?"Remover":"Menos"}">${q===1 ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>' : "−"}</button><span>${q} ${q===1?"kit":"kits"} no carrinho</span><button type="button" data-su="${i}" aria-label="Mais">+</button></div>`
     : `<button type="button" class="see qadd" data-q="${i}">Adicionar ao carrinho</button>`;
 };
 const renderActs = () => PECAS.forEach((_,i) => renderAct(i));
@@ -268,7 +268,7 @@ const abrir = i => {
   $("det").innerHTML = `<div class="dgal">${galeria(p,i,"dg")}</div>
     <div class="info"><h3>${esc(p.nome)}</h3><span class="price">${mt(p.preco)}</span>
       ${p.descricao ? `<p>${esc(p.descricao)}</p>` : ""}
-      <div class="row" style="flex-wrap:wrap"><span>Comprar</span><div class="sizes" id="fm"><button type="button" class="sz on" data-fm="un">1 peça · ${mt(p.preco)}</button><button type="button" class="sz" data-fm="kit">Kit 6 peças · ${p.kit ? mt(p.kit) : "preço no WhatsApp"}</button></div></div>
+      <div class="row"><span>O que recebe</span><strong>Kit de 6 peças · cores variadas</strong></div>
       <div class="row" style="flex-wrap:wrap"><span>Tamanho</span><div class="sizes" id="sz">${tams(p).map(t => `<button type="button" class="sz${t===tam?" on":""}" data-sz="${esc(t)}">${esc(t)}</button>`).join("")}</div></div><p class="err" id="szErr" style="min-height:0"></p>
       <div class="row"><span>Quantidade</span><div class="qty"><button type="button" id="menos" aria-label="Menos">−</button><span id="dq">1</span><button type="button" id="mais" aria-label="Mais">+</button></div></div>
       <button type="button" class="pick" id="add">Adicionar ao carrinho</button>
@@ -278,7 +278,7 @@ const abrir = i => {
 };
 const fechar = () => { $("sheet").classList.remove("open"); document.body.style.overflow = ""; aberta = -1; };
 
-const linha = o => { const p = PECAS[o.i], v = precoDe(p,o.f); return {p, v: v ? v*o.q : 0, txt: `${o.q}× ${p.nome}${o.f==="kit" ? " — Kit 6 peças" : ""} · Tam.\u00a0${o.t}`, preco: v ? mt(v*o.q) : "a confirmar"}; };
+const linha = o => { const p = PECAS[o.i], v = precoDe(p,o.f); return {p, v: v ? v*o.q : 0, txt: `${o.q}× Kit 6 ${p.nome} · Tam.\u00a0${o.t}`, preco: v ? mt(v*o.q) : "a confirmar"}; };
 const totais = ks => { let t = 0, falta = false; ks.forEach(k => { const l = linha(pedido[k]); t += l.v; if (!l.v) falta = true; }); return (t ? mt(t) : "") + (falta ? (t ? " + kit a confirmar" : "A confirmar") : ""); };
 const renderPedido = () => {
   const ks = Object.keys(pedido);
