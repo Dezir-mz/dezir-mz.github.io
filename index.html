@@ -225,6 +225,12 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 <script>
 {
 const $ = id => document.getElementById(id);
+const track = (ev, data) => { try { if (window.fbq) fbq("track", ev, data || {}); } catch(e) {} };
+const loadPixel = id => {
+  if (!id || window.fbq) return;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+  fbq("init", id); fbq("track", "PageView");
+};
 const mt = n => n ? String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " MT" : "Preço em breve";
 const tams = p => Array.isArray(p.tamanhos) ? p.tamanhos : String(p.tamanhos||"").split(/[·,]/).map(x=>x.trim()).filter(Boolean);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -263,6 +269,7 @@ const ligar = (g, onChange) => { const n = g.children.length, id = g.dataset.g; 
     onChange && onChange(k); }, {passive:true}); };
 
 const abrir = i => {
+  track("ViewContent", {content_name: PECAS[i].nome, content_type: "product", value: PECAS[i].preco || 0, currency: "MZN"});
   aberta = i; cur = 0; qtd = 1; tam = tams(PECAS[i]).length === 1 ? tams(PECAS[i])[0] : ""; fmt = "un";
   const p = PECAS[i], sl = slidesDe(p), n = sl.length;
   $("det").innerHTML = `<div class="dgal">${galeria(p,i,"dg")}</div>
@@ -292,7 +299,7 @@ const renderPedido = () => {
 };
 
 fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
-  PECAS = d.pecas || []; WHATSAPP = d.whatsapp || "";
+  PECAS = d.pecas || []; WHATSAPP = d.whatsapp || ""; loadPixel(d.pixel);
   if (d.telefone) { $("loja").textContent = d.telefone; $("loja").href = "https://wa.me/" + WHATSAPP; }
   if (d.fundo) { $("bg").innerHTML = ""; $("bg").style.backgroundImage = `url("${d.fundo}")`; }
   $("msg").textContent = PECAS.length ? "" : "Novas peças em breve.";
@@ -316,7 +323,7 @@ document.addEventListener("click", e => {
   const fm = t.closest("[data-fm]");
   if (fm) { fmt = fm.dataset.fm; document.querySelectorAll("#fm .sz").forEach(b => b.classList.toggle("on", b===fm)); return; }
   if (sz) { tam = sz.dataset.sz; document.querySelectorAll("#sz .sz").forEach(b => b.classList.toggle("on", b===sz)); $("szErr").textContent = ""; return; }
-  if (add) { if (!tam) { $("szErr").textContent = "Escolha o tamanho."; return; } const k = aberta + "-" + tam + "-" + fmt; pedido[k] = {i:aberta, m:cur, t:tam, f:fmt, q:(pedido[k]?.q||0) + qtd}; renderPedido();
+  if (add) { if (!tam) { $("szErr").textContent = "Escolha o tamanho."; return; } const k = aberta + "-" + tam + "-" + fmt; pedido[k] = {i:aberta, m:cur, t:tam, f:fmt, q:(pedido[k]?.q||0) + qtd}; renderPedido(); track("AddToCart", {content_name: PECAS[aberta].nome, value: (PECAS[aberta].preco||0)*qtd, currency: "MZN"});
     fechar(); $("pedido").scrollIntoView({behavior:"smooth"}); return; }
   const qs = t.closest("[data-qs]");
   if (qs) { const i = +qs.dataset.qs; qsel[i] = qs.dataset.t; qs.parentElement.querySelectorAll(".qsz").forEach(b => b.classList.toggle("on", b===qs)); renderAct(i); return; }
@@ -326,13 +333,14 @@ document.addEventListener("click", e => {
   const qa = t.closest("[data-q]");
   if (qa) { const i = +qa.dataset.q, tt = qsel[i] ?? (tams(PECAS[i]).length===1 ? tams(PECAS[i])[0] : "");
     if (!tt) { qa.textContent = "Escolha o tamanho ↑"; qa.classList.add("warn"); return; }
-    const k = i + "-" + tt + "-un"; pedido[k] = {i, m:0, t:tt, f:"un", q:(pedido[k]?.q||0) + 1}; renderPedido(); pulse(); return; }
+    const k = i + "-" + tt + "-un"; pedido[k] = {i, m:0, t:tt, f:"un", q:(pedido[k]?.q||0) + 1}; renderPedido(); pulse(); track("AddToCart", {content_name: PECAS[i].nome, value: PECAS[i].preco || 0, currency: "MZN"}); return; }
   const o = t.closest("[data-open]");
   if (o && !t.closest(".slides")) { abrir(+o.dataset.open); return; }
   if (o && t.closest(".slides")) { abrir(+o.dataset.open); }
 });
 const pulse = () => { const f = $("fab"); f.classList.remove("pop"); void f.offsetWidth; f.classList.add("pop"); };
-try { new IntersectionObserver(es => { $("fab").style.visibility = es[0].isIntersecting ? "hidden" : ""; }, {threshold:0.15}).observe($("pedido")); } catch(err) {}
+let ic = false;
+try { new IntersectionObserver(es => { if (es[0].isIntersecting && !ic && Object.keys(pedido).length) { ic = true; track("InitiateCheckout", {currency: "MZN"}); } $("fab").style.visibility = es[0].isIntersecting ? "hidden" : ""; }, {threshold:0.15}).observe($("pedido")); } catch(err) {}
 document.addEventListener("keydown", e => { if (e.key === "Escape" && aberta > -1) fechar(); });
 
 const v = id => $(id).value.trim();
@@ -355,6 +363,8 @@ $("sendBtn").addEventListener("click", e => {
   if (!v("quando")) f.push("quando");
   if (f.length) { e.preventDefault(); $("err").textContent = "Falta: " + f.join(", ") + "."; return; }
   $("err").textContent = "";
+  const ks2 = Object.keys(pedido), val = ks2.reduce((a,k) => a + linha(pedido[k]).v, 0);
+  track("Purchase", {value: val, currency: "MZN", num_items: ks2.reduce((a,k) => a + pedido[k].q, 0), contents: ks2.map(k => ({id: PECAS[pedido[k].i].nome, quantity: pedido[k].q}))});
 });
 }
 </script>
