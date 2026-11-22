@@ -1,0 +1,95 @@
+{
+  "whatsapp": "258879871228",
+  "telefone": "87 987 1228",
+  "fundo": "fundo.jpg",
+  "pecas": [
+    {
+      "nome": "Boxer Renda Desejo",
+      "preco": 800,
+      "tamanhos": [
+        "S",
+        "M",
+        "L"
+      ],
+      "descricao": "Renda floral que veste como uma segunda pele: cintura recortada, toque macio e transparência na medida certa. Confortável no dia a dia, irresistível à noite.",
+      "fotos": [
+        "fotos/boxer-2.jpg",
+        "fotos/boxer-1.jpg"
+      ],
+      "capa": "fotos/boxer-2.jpg",
+      "kit": null
+    },
+    {
+      "nome": "Fio Algodão Canelado",
+      "preco": 700,
+      "tamanhos": [
+        "S",
+        "M",
+        "L"
+      ],
+      "descricao": "Fio dental em algodão canelado, macio e respirável. Confortável e saudável para a sua florzinha, sem marcar a roupa.",
+      "fotos": [
+        "fotos/fio-0.jpg",
+        "fotos/fio-1.jpg",
+        "fotos/fio-2.jpg",
+        "fotos/fio-3.jpg",
+        "fotos/fio-4.jpg"
+      ],
+      "capa": "fotos/fio-0.jpg",
+      "kit": null
+    },
+    {
+      "nome": "Fio Renda Laço",
+      "preco": 700,
+      "tamanhos": [
+        "M"
+      ],
+      "descricao": "Fio dental em renda floral com laçinhos de cetim nas laterais. Delicado, leve e feito para se sentir bonita em cada detalhe.",
+      "capa": "fotos/renda-1.jpg",
+      "fotos": [
+        "fotos/renda-1.jpg",
+        "fotos/renda-2.jpg",
+        "fotos/renda-3.jpg"
+      ],
+      "kit": null
+    },
+    {
+      "nome": "Fio Renda Ajustável",
+      "preco": 700,
+      "tamanhos": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "descricao": "Fio dental em renda floral com alças reguláveis dos dois lados: ajusta-se ao seu corpo para um caimento perfeito. Sensual, confortável e sem apertar.",
+      "capa": "fotos/ajuste-1.jpg",
+      "fotos": [
+        "fotos/ajuste-1.jpg",
+        "fotos/ajuste-2.jpg",
+        "fotos/ajuste-3.jpg",
+        "fotos/ajuste-4.jpg"
+      ],
+      "kit": null
+    },
+    {
+      "nome": "Calcinha Sem Costura Ajustável",
+      "preco": 750,
+      "tamanhos": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "descricao": "Tecido liso e acetinado, sem costuras, que desaparece debaixo da roupa. Fechos laterais com 2 posições para ajustar à sua medida. Conforto total, zero marcas.",
+      "capa": "fotos/semcostura-1.jpg",
+      "fotos": [
+        "fotos/semcostura-1.jpg",
+        "fotos/semcostura-2.jpg",
+        "fotos/semcostura-3.jpg",
+        "fotos/semcostura-4.jpg"
+      ],
+      "kit": null
+    }
+  ]
+}
