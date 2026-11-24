@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dezir-mz.github.io/sitemap.xml
