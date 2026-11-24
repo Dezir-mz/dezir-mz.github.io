@@ -361,13 +361,13 @@ fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
   $("msg").textContent = PECAS.length ? "" : "Novas peças em breve.";
   $("track").innerHTML = PECAS.map(card).join("");
   renderPedido();
-  // peça em destaque: ?peca=boxer (link dos anúncios) abre logo o produto
+  // peça em destaque: ?peca=boxer (link dos anúncios) define a peça da barra em baixo
   const q = (new URLSearchParams(location.search).get("peca") || "").toLowerCase();
   const achada = q ? PECAS.findIndex(p => p.nome.toLowerCase().includes(q)) : -1;
   destaque = achada > -1 ? achada : 0;
   const dp = PECAS[destaque];
   if (dp) { $("bbImg").src = capa(dp); $("bbNome").textContent = "Kit 6 " + dp.nome; $("bbPreco").textContent = mt(dp.preco) + " · paga quando receber"; }
-  if (achada > -1) { doAnuncio = true; setTimeout(() => abrir(achada), 250); }
+  if (achada > -1) doAnuncio = true; // veio do anúncio: entra no site normal, só ganha a barra em baixo
   revelar();
 }).catch(() => { $("msg").textContent = "Não foi possível carregar as peças. Actualize a página."; renderPedido(); });
 
