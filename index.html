@@ -367,7 +367,7 @@ fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
   destaque = achada > -1 ? achada : 0;
   const dp = PECAS[destaque];
   if (dp) { $("bbImg").src = capa(dp); $("bbNome").textContent = "Kit 6 " + dp.nome; $("bbPreco").textContent = mt(dp.preco) + " · paga quando receber"; }
-  if (achada > -1) setTimeout(() => abrir(achada), 250);
+  if (achada > -1) { doAnuncio = true; setTimeout(() => abrir(achada), 250); }
   revelar();
 }).catch(() => { $("msg").textContent = "Não foi possível carregar as peças. Actualize a página."; renderPedido(); });
 
@@ -412,10 +412,10 @@ let ic = false;
 try { new IntersectionObserver(es => { if (es[0].isIntersecting && !ic && Object.keys(pedido).length) { ic = true; track("InitiateCheckout", {currency: "MZN"}); } $("fab").style.visibility = es[0].isIntersecting ? "hidden" : ""; }, {threshold:0.15}).observe($("pedido")); } catch(err) {}
 document.addEventListener("keydown", e => { if (e.key === "Escape" && aberta > -1) fechar(); });
 
-// barra "Comprar agora" fixa em baixo: aparece depois do topo, some quando há carrinho, detalhe aberto ou no formulário
-let destaque = 0, noPedido = false;
+// barra "Comprar agora" fixa em baixo (só visitas vindas do anúncio): aparece depois do topo, some quando há carrinho, detalhe aberto ou no formulário
+let destaque = 0, noPedido = false, doAnuncio = false; // barra só para quem veio de um anúncio (?peca=...)
 const barra = () => { const passou = scrollY > innerHeight * 0.6, vazio = !Object.keys(pedido).length;
-  $("buybar").classList.toggle("show", passou && vazio && aberta < 0 && !noPedido && PECAS.length > 0); };
+  $("buybar").classList.toggle("show", doAnuncio && passou && vazio && aberta < 0 && !noPedido && PECAS.length > 0); };
 addEventListener("scroll", barra, {passive:true});
 document.addEventListener("click", () => setTimeout(barra, 0));
 try { new IntersectionObserver(es => { noPedido = es[0].isIntersecting; barra(); }, {threshold:0.05}).observe($("pedido")); } catch(err) {}
