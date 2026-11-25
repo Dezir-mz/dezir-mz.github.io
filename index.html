@@ -378,7 +378,9 @@ document.addEventListener("click", e => {
   const th = t.closest("[data-th]");
   if (th) { const g = document.querySelector('.slides[data-g="dg"]'); g.scrollTo({left: g.clientWidth * +th.dataset.th, behavior:"smooth"}); return; }
   const duv = t.closest(".ask, #loja");
-  if (duv) track("Contact", {content_name: duv.id === "loja" ? "WhatsApp loja (topo)" : "Dúvida: " + (PECAS[aberta]?.nome || "")});
+  if (duv) { const peca = duv.id === "loja" ? "" : (PECAS[aberta]?.nome || "");
+    track("Contact", {content_name: peca ? "Dúvida: " + peca : "WhatsApp loja (topo)"});
+    contar(peca ? "duvida" : "whatsapp-topo", peca); }
   const x = t.closest("[data-x]");
   if (x) { delete pedido[x.dataset.x]; renderPedido(); return; }
   if (t.closest("#fechar")) { fechar(); return; }
@@ -407,6 +409,14 @@ document.addEventListener("click", e => {
   if (o && t.closest(".slides")) { abrir(+o.dataset.open); }
 });
 const quickAdd = (i, tt) => { const k = i + "-" + tt + "-un"; pedido[k] = {i, m:0, t:tt, f:"un", q:(pedido[k]?.q||0) + 1}; renderPedido(); pulse(); toast("Adicionado ao carrinho ✓ · Tam. " + tt); track("AddToCart", {content_name: PECAS[i].nome, value: PECAS[i].preco || 0, currency: "MZN"}); };
+// contador próprio de cliques (dúvida / WhatsApp) — vê os números em /contador.html
+const CNT = "https://countapi.mileshilliard.com/api/v1/hit/";
+const slug = x => String(x).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const hoje = () => new Date(Date.now() + 2*3600e3).toISOString().slice(0,10); // hora de Maputo
+const contar = (tipo, peca) => { const base = "dezir-mz-" + tipo, ks = [base + "-total", base + "-dia-" + hoje()];
+  if (peca) ks.push(base + "-peca-" + slug(peca));
+  if (doAnuncio) ks.push(base + "-anuncio");
+  ks.forEach(k => { try { fetch(CNT + k, {mode:"no-cors", keepalive:true, cache:"no-store"}); } catch(e) {} }); };
 const toast = m => { let t = $("toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; document.body.appendChild(t); } t.textContent = m; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show"); };
 const pend = {}; let pendSheet = false;
 const pulse = () => { const f = $("fab"); f.classList.remove("pop"); void f.offsetWidth; f.classList.add("pop"); };
