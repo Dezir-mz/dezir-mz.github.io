@@ -6,53 +6,94 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Dézir — resultados</title>
 <style>
-body{margin:0;font:17px/1.45 system-ui,-apple-system,sans-serif;background:#faf7f5;color:#1a1617;padding:22px 16px 60px}
-.box{max-width:520px;margin:0 auto}
-h1{font-family:Georgia,serif;font-weight:500;font-size:28px;margin:0 0 16px;text-align:center}
-.card{background:#fff;border:1px solid #ece6e1;border-radius:14px;padding:18px;margin-bottom:16px}
-.card h2{margin:0 0 6px;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:#7a7174}
-.l{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid #f1ece8}
-.l:first-of-type{border-top:0}
-.l span{font-size:16px}
-.n{font-size:28px;font-weight:700;min-width:56px;text-align:right}
-.n img{height:24px;vertical-align:middle}
-.ok .n{color:#1f9d55}
-.wa{background:#f4f9f6;border-radius:10px;padding:11px 12px;margin-top:6px;border-top:0}
-.wa .n{color:#1f9d55}
-.wa small{display:block;color:#7a7174;font-size:13px}
-.resumo{margin:10px 0 0;color:#1f6b40;font-size:15px;text-align:center}
-button{display:block;width:100%;max-width:520px;margin:0 auto;min-height:52px;border-radius:99px;border:0;background:#c4122f;color:#fff;font:600 17px system-ui,sans-serif}
+body{margin:0;font:16px/1.45 system-ui,-apple-system,sans-serif;background:#faf7f5;color:#1a1617;padding:22px 14px 60px}
+.box{max-width:560px;margin:0 auto}
+h1{font-family:Georgia,serif;font-weight:500;font-size:28px;margin:0 0 14px;text-align:center}
+.hero{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.hero div{background:#1f9d55;color:#fff;border-radius:12px;padding:12px 6px;text-align:center}
+.hero b{display:block;font-size:34px;line-height:1.1}
+.hero small{font-size:13px;opacity:.9}
+.hero div+div{background:#fff;color:#1a1617;border:1px solid #ece6e1}
+.hero div+div b{color:#1f9d55}
+.card{background:#fff;border:1px solid #ece6e1;border-radius:14px;padding:6px 12px 10px;margin-bottom:14px}
+.card h2{margin:10px 0 4px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#7a7174}
+table{width:100%;border-collapse:collapse}
+th{font-size:13px;color:#7a7174;font-weight:600;text-align:right;padding:8px 4px}
+th:first-child{text-align:left}
+td{padding:11px 4px;border-top:1px solid #f1ece8;text-align:right;font-size:20px;font-weight:700}
+td:first-child{text-align:left;font-size:15px;font-weight:400}
+td img{height:20px;vertical-align:middle}
+tr.ok td{color:#1f9d55;background:#f4f9f6}
+tr.ok td:first-child{color:#1a1617;font-weight:600}
+.nota{font-size:13px;color:#7a7174;margin:8px 2px 0}
+.taxa{margin:2px 0 14px;text-align:center;color:#1f6b40;font-size:15px}
+button{display:block;width:100%;min-height:52px;border-radius:99px;border:0;background:#c4122f;color:#fff;font:600 17px system-ui,sans-serif}
 </style>
 </head>
 <body><div class="box">
 <h1>Resultados do site</h1>
-<div id="cards"></div>
+
+<div class="hero">
+  <div><b id="h-hoje">…</b><small>Pedidos hoje</small></div>
+  <div><b id="h-ontem">…</b><small>Pedidos ontem</small></div>
+  <div><b id="h-total">…</b><small>Pedidos no total</small></div>
+</div>
+<p class="taxa" id="taxa" hidden></p>
+
+<div class="card"><h2>Do site ao pedido</h2>
+<table>
+  <tr><th></th><th>Hoje</th><th>Ontem</th><th>Total</th></tr>
+  <tr><td>👀 Entraram no site</td><td data-k="visita"></td></tr>
+  <tr><td>🛒 Puseram no carrinho</td><td data-k="carrinho"></td></tr>
+  <tr class="ok"><td>✅ Concluíram o pedido</td><td data-k="pedido"></td></tr>
+</table>
+<p class="nota">“Concluíram o pedido” = preencheram nome, número, local e dia, e tocaram em “Concluir pedido pelo WhatsApp”.</p>
+</div>
+
+<div class="card"><h2>WhatsApp</h2>
+<table>
+  <tr><th></th><th>Hoje</th><th>Ontem</th><th>Total</th></tr>
+  <tr><td>💬 Pediram ajuda (dúvida)</td><td data-k="duvida"></td></tr>
+  <tr><td>📞 Número do topo</td><td data-k="whatsapp-topo"></td></tr>
+  <tr class="ok"><td>📲 Todos os contactos</td><td data-k="todos"></td></tr>
+</table>
+<p class="nota">“Todos os contactos” = pedidos + dúvidas + número do topo.</p>
+</div>
+
+<div class="card"><h2>Pedidos por peça (total)</h2>
+<table id="pecas"></table>
+</div>
+
 <button onclick="location.reload()">Actualizar</button>
 </div>
 <script>
 const API = "https://countapi.mileshilliard.com/api/v1/get/";
 const dia = d => new Date(Date.now() + 2*3600e3 - d*86400e3).toISOString().slice(0,10); // hora de Maputo
-const PER = [["hoje","Hoje","-dia-" + dia(0)], ["ontem","Ontem","-dia-" + dia(1)], ["total","Desde o início","-total"]];
-const LIN = [["visita","👀 Entraram no site",""], ["pedido","✅ Fizeram pedido","ok"], ["duvida","💬 Pediram ajuda (botão de dúvida)",""]];
-document.getElementById("cards").innerHTML = PER.map(([p, tit]) => `<div class="card"><h2>${tit}</h2>
-  ${LIN.map(([k, rot, c]) => `<div class="l ${c}"><span>${rot}</span><b class="n" id="${p}-${k}">…</b></div>`).join("")}
-  <div class="l wa"><span>📲 Entraram em contacto pelo WhatsApp<small>Todos: pedidos + dúvidas + número do topo</small></span><b class="n" id="${p}-wa">…</b></div>
-  <p class="resumo" id="${p}-r" hidden></p></div>`).join("");
-
+const SUF = ["-dia-" + dia(0), "-dia-" + dia(1), "-total"];
+const slug = x => String(x).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 const ler = key => fetch(API + key, {cache:"no-store"}).then(r => r.status === 404 ? {value:0} : r.json()).then(d => parseInt(d.value || 0, 10));
-const imagem = (el, key) => el.innerHTML = `<img alt="0" src="${API}${key}/shield?text=+&bgcolor=1f9d55&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`;
-PER.forEach(([p, , suf]) => {
-  const keys = {visita:"dezir-mz-visita"+suf, pedido:"dezir-mz-pedido"+suf, duvida:"dezir-mz-duvida"+suf, topo:"dezir-mz-whatsapp-topo"+suf};
-  Promise.all(Object.values(keys).map(ler)).then(([v, o, d, t]) => {
-    document.getElementById(p+"-visita").textContent = v;
-    document.getElementById(p+"-pedido").textContent = o;
-    document.getElementById(p+"-duvida").textContent = d;
-    document.getElementById(p+"-wa").textContent = o + d + t;
-    if (v > 0 && o <= v) { const r = document.getElementById(p+"-r"); r.hidden = false; r.textContent = `De cada 100 pessoas que entram, ${Math.round(o / v * 100)} fazem pedido.`; }
-  }).catch(() => { // navegador bloqueou a leitura directa: mostra os números em imagem
-    ["visita","pedido","duvida"].forEach(k => imagem(document.getElementById(p+"-"+k), keys[k]));
-    imagem(document.getElementById(p+"-wa"), "dezir-mz-whatsapp-todos"+suf);
-  });
+const img = key => `<img alt="0" src="${API}${key}/shield?text=+&bgcolor=1f9d55&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`;
+const pinta = (el, key, extra) => (extra ? Promise.all([key, ...extra].map(ler)).then(a => a.reduce((x,y) => x+y, 0)) : ler(key))
+  .then(n => { el.textContent = n; return n; }).catch(() => { el.innerHTML = img(key); return null; });
+
+// tabela: cada linha recebe 3 colunas (hoje, ontem, total)
+const V = {};
+document.querySelectorAll("td[data-k]").forEach(td => { const k = td.dataset.k, tr = td.parentElement; td.remove();
+  SUF.forEach((s, i) => { const c = document.createElement("td"); tr.appendChild(c);
+    const key = k === "todos" ? "dezir-mz-whatsapp-todos" + s : "dezir-mz-" + k + s;
+    const extra = k === "todos" ? ["dezir-mz-pedido" + s, "dezir-mz-duvida" + s, "dezir-mz-whatsapp-topo" + s] : null;
+    pinta(c, extra ? extra[0] : key, extra ? extra.slice(1) : null).then(n => { (V[k] = V[k] || [])[i] = n; taxa(); }); }); });
+
+// destaque: pedidos hoje / ontem / total
+["hoje","ontem","total"].forEach((p, i) => pinta(document.getElementById("h-" + p), "dezir-mz-pedido" + SUF[i]));
+
+const taxa = () => { const v = (V.visita||[])[0], o = (V.pedido||[])[0], el = document.getElementById("taxa");
+  if (v > 0 && o != null && o <= v) { el.hidden = false; el.textContent = `Hoje: de cada 100 pessoas que entram, ${Math.round(o / v * 100)} concluem o pedido.`; } };
+
+fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
+  const t = document.getElementById("pecas");
+  t.innerHTML = (d.pecas||[]).map((p, i) => `<tr><td>${p.nome}</td><td id="pp${i}"></td></tr>`).join("");
+  (d.pecas||[]).forEach((p, i) => pinta(document.getElementById("pp" + i), "dezir-mz-pedido-peca-" + slug(p.nome)));
 });
 </script>
 </body>

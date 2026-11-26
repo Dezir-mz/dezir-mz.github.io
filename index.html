@@ -392,7 +392,7 @@ document.addEventListener("click", e => {
   if (fm) { fmt = fm.dataset.fm; document.querySelectorAll("#fm .sz").forEach(b => b.classList.toggle("on", b===fm)); return; }
   if (sz) { tam = sz.dataset.sz; document.querySelectorAll("#sz .sz").forEach(b => b.classList.toggle("on", b===sz)); $("szErr").textContent = ""; $("sz").classList.remove("need");
     if (pendSheet) { pendSheet = false; $("add").click(); } return; }
-  if (add) { if (!tam) { pendSheet = true; $("sz").classList.add("need"); $("szErr").textContent = "↑ Toque no seu tamanho — entra logo no carrinho"; return; } const k = aberta + "-" + tam + "-" + fmt; pedido[k] = {i:aberta, m:cur, t:tam, f:fmt, q:(pedido[k]?.q||0) + qtd}; renderPedido(); track("AddToCart", {content_name: PECAS[aberta].nome, value: (PECAS[aberta].preco||0)*qtd, currency: "MZN"});
+  if (add) { if (!tam) { pendSheet = true; $("sz").classList.add("need"); $("szErr").textContent = "↑ Toque no seu tamanho — entra logo no carrinho"; return; } const k = aberta + "-" + tam + "-" + fmt; pedido[k] = {i:aberta, m:cur, t:tam, f:fmt, q:(pedido[k]?.q||0) + qtd}; renderPedido(); contar("carrinho"); track("AddToCart", {content_name: PECAS[aberta].nome, value: (PECAS[aberta].preco||0)*qtd, currency: "MZN"});
     fechar(); $("pedido").scrollIntoView({behavior:"smooth"}); return; }
   const qs = t.closest("[data-qs]");
   if (qs) { const i = +qs.dataset.qs; qsel[i] = qs.dataset.t; const box = qs.parentElement; box.querySelectorAll(".qsz").forEach(b => b.classList.toggle("on", b===qs)); box.classList.remove("need"); box.removeAttribute("data-msg");
@@ -408,7 +408,7 @@ document.addEventListener("click", e => {
   if (o && !t.closest(".slides")) { abrir(+o.dataset.open); return; }
   if (o && t.closest(".slides")) { abrir(+o.dataset.open); }
 });
-const quickAdd = (i, tt) => { const k = i + "-" + tt + "-un"; pedido[k] = {i, m:0, t:tt, f:"un", q:(pedido[k]?.q||0) + 1}; renderPedido(); pulse(); toast("Adicionado ao carrinho ✓ · Tam. " + tt); track("AddToCart", {content_name: PECAS[i].nome, value: PECAS[i].preco || 0, currency: "MZN"}); };
+const quickAdd = (i, tt) => { const k = i + "-" + tt + "-un"; pedido[k] = {i, m:0, t:tt, f:"un", q:(pedido[k]?.q||0) + 1}; renderPedido(); pulse(); contar("carrinho"); toast("Adicionado ao carrinho ✓ · Tam. " + tt); track("AddToCart", {content_name: PECAS[i].nome, value: PECAS[i].preco || 0, currency: "MZN"}); };
 // contador próprio de cliques (dúvida / WhatsApp) — vê os números em /contador.html
 const CNT = "https://countapi.mileshilliard.com/api/v1/hit/";
 const slug = x => String(x).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
