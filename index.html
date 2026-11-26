@@ -414,6 +414,7 @@ const CNT = "https://countapi.mileshilliard.com/api/v1/hit/";
 const slug = x => String(x).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 const hoje = () => new Date(Date.now() + 2*3600e3).toISOString().slice(0,10); // hora de Maputo
 const contar = (tipo, peca) => { const base = "dezir-mz-" + tipo, ks = [base + "-total", base + "-dia-" + hoje()];
+  if (["pedido","duvida","whatsapp-topo"].includes(tipo)) ks.push("dezir-mz-whatsapp-todos-total", "dezir-mz-whatsapp-todos-dia-" + hoje());
   if (peca) ks.push(base + "-peca-" + slug(peca));
   if (doAnuncio) ks.push(base + "-anuncio");
   ks.forEach(hit); };
