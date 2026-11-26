@@ -4,46 +4,35 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Dézir — contador de cliques</title>
+<title>Dézir — contador</title>
 <style>
 body{margin:0;font:16px/1.5 system-ui,-apple-system,sans-serif;background:#faf7f5;color:#1a1617;padding:24px 18px 60px}
-h1{font-family:Georgia,serif;font-weight:500;margin:0 0 4px}
-p.sub{color:#7a7174;margin:0 0 22px;font-size:14px}
+h1{font-family:Georgia,serif;font-weight:500;margin:0 0 18px}
 section{background:#fff;border:1px solid #ece6e1;border-radius:10px;padding:16px;margin-bottom:16px;max-width:560px}
-h2{font-size:17px;margin:0 0 10px}
+h2{font-size:17px;margin:0 0 4px}
+p.sub{color:#7a7174;margin:0 0 8px;font-size:14px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-top:1px solid #f1ece8}
-.row:first-of-type{border-top:0}
 .row span{font-size:15px}
 .row img{height:22px}
 button{min-height:44px;padding:0 20px;border-radius:99px;border:0;background:#c4122f;color:#fff;font:600 15px system-ui,sans-serif}
 </style>
 </head>
 <body>
-<h1>Pedidos e cliques no WhatsApp</h1>
-<p class="sub">Contagem de todos os cliques no site (com ou sem anúncio). O dia segue a hora de Maputo.</p>
+<h1>Contador Dézir</h1>
 
-<section><h2>Pedidos enviados pelo WhatsApp</h2><p class="sub" style="margin:0 0 6px">Tocaram em “Concluir pedido pelo WhatsApp” com o formulário completo.</p><div id="pedido"></div></section>
-<section><h2>Pedidos por peça</h2><div id="pedpecas"></div></section>
-<section><h2>Tentaram concluir com dados em falta</h2><div id="incompleto"></div></section>
-<section><h2>Botão “Tirar dúvida no WhatsApp”</h2><div id="duvida"></div></section>
-<section><h2>Dúvidas por peça</h2><div id="pecas"></div></section>
-<section><h2>Número do WhatsApp no topo do site</h2><div id="topo"></div></section>
+<section><h2>Pedidos concluídos</h2><p class="sub">Preencheram tudo e tocaram em “Concluir pedido pelo WhatsApp”.</p><div id="pedido"></div></section>
+<section><h2>Dúvidas no WhatsApp</h2><p class="sub">Tocaram em “Tirar dúvida no WhatsApp”.</p><div id="duvida"></div></section>
+<section><h2>WhatsApp do topo do site</h2><p class="sub">Tocaram no número da loja no topo.</p><div id="topo"></div></section>
 <button onclick="location.reload()">Actualizar</button>
 
 <script>
 const G = "https://countapi.mileshilliard.com/api/v1/get/";
-const slug = x => String(x).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-const dia = d => new Date(Date.now() + 2*3600e3 - d*86400e3).toISOString().slice(0,10);
-const badge = (k) => `<img alt="0" src="${G}${k}/shield?text=cliques&bgcolor=c4122f&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`;
+const hoje = new Date(Date.now() + 2*3600e3).toISOString().slice(0,10); // hora de Maputo
+const badge = k => `<img alt="0" src="${G}${k}/shield?text=&bgcolor=c4122f&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`;
 const linha = (rot, k) => `<div class="row"><span>${rot}</span>${badge(k)}</div>`;
-const bloco = (id, base) => { document.getElementById(id).innerHTML =
-  linha("Hoje", base + "-dia-" + dia(0)) + linha("Ontem", base + "-dia-" + dia(1)) +
-  linha("Vindos de anúncio (total)", base + "-anuncio") + linha("Total desde o início", base + "-total"); };
-bloco("pedido", "dezir-mz-pedido"); bloco("incompleto", "dezir-mz-pedido-incompleto"); bloco("duvida", "dezir-mz-duvida"); bloco("topo", "dezir-mz-whatsapp-topo");
-fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
-  document.getElementById("pecas").innerHTML = (d.pecas||[]).map(p => linha(p.nome, "dezir-mz-duvida-peca-" + slug(p.nome))).join("");
-  document.getElementById("pedpecas").innerHTML = (d.pecas||[]).map(p => linha(p.nome, "dezir-mz-pedido-peca-" + slug(p.nome))).join("");
-});
+const bloco = (id, base) => document.getElementById(id).innerHTML =
+  linha("Hoje", base + "-dia-" + hoje) + linha("Total desde o início", base + "-total");
+bloco("pedido", "dezir-mz-pedido"); bloco("duvida", "dezir-mz-duvida"); bloco("topo", "dezir-mz-whatsapp-topo");
 </script>
 </body>
 </html>
