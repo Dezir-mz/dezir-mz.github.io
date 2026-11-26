@@ -4,36 +4,55 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Dézir — contador</title>
+<title>Dézir — resultados</title>
 <style>
-body{margin:0;font:16px/1.5 system-ui,-apple-system,sans-serif;background:#faf7f5;color:#1a1617;padding:24px 18px 60px}
-h1{font-family:Georgia,serif;font-weight:500;margin:0 0 18px}
-section{background:#fff;border:1px solid #ece6e1;border-radius:10px;padding:16px;margin-bottom:16px;max-width:560px}
-h2{font-size:17px;margin:0 0 4px}
-p.sub{color:#7a7174;margin:0 0 8px;font-size:14px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-top:1px solid #f1ece8}
-.row span{font-size:15px}
-.row img{height:22px}
-button{min-height:44px;padding:0 20px;border-radius:99px;border:0;background:#c4122f;color:#fff;font:600 15px system-ui,sans-serif}
+body{margin:0;font:17px/1.45 system-ui,-apple-system,sans-serif;background:#faf7f5;color:#1a1617;padding:22px 16px 60px}
+.box{max-width:520px;margin:0 auto}
+h1{font-family:Georgia,serif;font-weight:500;font-size:28px;margin:0 0 16px;text-align:center}
+.card{background:#fff;border:1px solid #ece6e1;border-radius:14px;padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 12px;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:#7a7174}
+.l{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid #f1ece8}
+.l:first-of-type{border-top:0}
+.l span{font-size:17px}
+.n{font-size:30px;font-weight:700;min-width:60px;text-align:right}
+.n img{height:24px;vertical-align:middle}
+.ok .n{color:#1f9d55}
+.resumo{margin:10px 0 0;padding:12px;border-radius:10px;background:#f4f9f6;color:#1f6b40;font-size:16px;text-align:center}
+button{display:block;width:100%;max-width:520px;margin:0 auto;min-height:52px;border-radius:99px;border:0;background:#c4122f;color:#fff;font:600 17px system-ui,sans-serif}
 </style>
 </head>
-<body>
-<h1>Contador Dézir</h1>
+<body><div class="box">
+<h1>Resultados do site</h1>
 
-<section><h2>Entraram no site</h2><p class="sub">Pessoas que abriram o site (cada pessoa conta uma vez por visita).</p><div id="visita"></div></section>
-<section><h2>Pedidos concluídos</h2><p class="sub">Preencheram tudo e tocaram em “Concluir pedido pelo WhatsApp”.</p><div id="pedido"></div></section>
-<section><h2>Dúvidas no WhatsApp</h2><p class="sub">Tocaram em “Tirar dúvida no WhatsApp”.</p><div id="duvida"></div></section>
-<section><h2>WhatsApp do topo do site</h2><p class="sub">Tocaram no número da loja no topo.</p><div id="topo"></div></section>
+<div class="card"><h2>Hoje</h2>
+  <div class="l"><span>👀 Entraram no site</span><b class="n" data-k="visita" data-p="hoje">…</b></div>
+  <div class="l ok"><span>✅ Fizeram pedido</span><b class="n" data-k="pedido" data-p="hoje">…</b></div>
+  <div class="l"><span>💬 Pediram ajuda no WhatsApp</span><b class="n" data-k="duvida" data-p="hoje">…</b></div>
+  <p class="resumo" id="r-hoje" hidden></p>
+</div>
+
+<div class="card"><h2>Desde o início</h2>
+  <div class="l"><span>👀 Entraram no site</span><b class="n" data-k="visita" data-p="total">…</b></div>
+  <div class="l ok"><span>✅ Fizeram pedido</span><b class="n" data-k="pedido" data-p="total">…</b></div>
+  <div class="l"><span>💬 Pediram ajuda no WhatsApp</span><b class="n" data-k="duvida" data-p="total">…</b></div>
+  <p class="resumo" id="r-total" hidden></p>
+</div>
+
 <button onclick="location.reload()">Actualizar</button>
-
+</div>
 <script>
-const G = "https://countapi.mileshilliard.com/api/v1/get/";
+const API = "https://countapi.mileshilliard.com/api/v1/get/";
 const hoje = new Date(Date.now() + 2*3600e3).toISOString().slice(0,10); // hora de Maputo
-const badge = (k, t) => `<img alt="0" src="${G}${k}/shield?text=${encodeURIComponent(t)}&bgcolor=c4122f&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`;
-const linha = (rot, k, t) => `<div class="row"><span>${rot}</span>${badge(k, t)}</div>`;
-const bloco = (id, base, t) => document.getElementById(id).innerHTML =
-  linha("Hoje", base + "-dia-" + hoje, t) + linha("Total desde o início", base + "-total", t);
-bloco("visita", "dezir-mz-visita", "visitas"); bloco("pedido", "dezir-mz-pedido", "pedidos"); bloco("duvida", "dezir-mz-duvida", "dúvidas"); bloco("topo", "dezir-mz-whatsapp-topo", "cliques");
+const chave = (k, p) => "dezir-mz-" + k + (p === "hoje" ? "-dia-" + hoje : "-total");
+const vals = {hoje:{}, total:{}};
+const resumo = p => { const v = vals[p].visita, o = vals[p].pedido; const el = document.getElementById("r-" + p);
+  if (v > 0 && o != null) { el.hidden = false; el.textContent = `De cada 100 pessoas que entram, ${Math.round(o / v * 100)} fazem pedido.`; } };
+document.querySelectorAll("[data-k]").forEach(el => { const k = el.dataset.k, p = el.dataset.p, key = chave(k, p);
+  fetch(API + key, {cache:"no-store"}).then(r => r.status === 404 ? {value:0} : r.json())
+    .then(d => { const n = parseInt(d.value || 0, 10); el.textContent = n; vals[p][k] = n; resumo(p); })
+    .catch(() => { // se o navegador bloquear a leitura directa, mostra o número em imagem
+      el.innerHTML = `<img alt="0" src="${API}${key}/shield?text=+&bgcolor=c4122f&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`; });
+});
 </script>
 </body>
 </html>
