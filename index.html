@@ -416,7 +416,8 @@ const hoje = () => new Date(Date.now() + 2*3600e3).toISOString().slice(0,10); //
 const contar = (tipo, peca) => { const base = "dezir-mz-" + tipo, ks = [base + "-total", base + "-dia-" + hoje()];
   if (peca) ks.push(base + "-peca-" + slug(peca));
   if (doAnuncio) ks.push(base + "-anuncio");
-  ks.forEach(k => { try { fetch(CNT + k, {mode:"no-cors", keepalive:true, cache:"no-store"}); } catch(e) {} }); };
+  ks.forEach(hit); };
+const hit = k => { try { fetch(CNT + k, {mode:"no-cors", keepalive:true, cache:"no-store"}); } catch(e) {} };
 const toast = m => { let t = $("toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; document.body.appendChild(t); } t.textContent = m; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show"); };
 const pend = {}; let pendSheet = false;
 const pulse = () => { const f = $("fab"); f.classList.remove("pop"); void f.offsetWidth; f.classList.add("pop"); };
@@ -457,9 +458,10 @@ $("sendBtn").addEventListener("click", e => {
   if (v("tel").replace(/\D/g,"").length < 9) f.push("número");
   if (!v("local")) f.push("onde receber");
   if (!v("quando")) f.push("quando");
-  if (f.length) { e.preventDefault(); $("err").textContent = "Falta: " + f.join(", ") + "."; return; }
+  if (f.length) { e.preventDefault(); $("err").textContent = "Falta: " + f.join(", ") + "."; contar("pedido-incompleto"); return; }
   $("err").textContent = "";
   const ks2 = Object.keys(pedido), val = ks2.reduce((a,k) => a + linha(pedido[k]).v, 0);
+  contar("pedido"); [...new Set(ks2.map(k => PECAS[pedido[k].i].nome))].forEach(n => hit("dezir-mz-pedido-peca-" + slug(n)));
   track("Purchase", {value: val, currency: "MZN", num_items: ks2.reduce((a,k) => a + pedido[k].q, 0), contents: ks2.map(k => ({id: PECAS[pedido[k].i].nome, quantity: pedido[k].q}))});
 });
 }

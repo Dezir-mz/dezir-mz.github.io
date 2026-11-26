@@ -19,11 +19,14 @@ button{min-height:44px;padding:0 20px;border-radius:99px;border:0;background:#c4
 </style>
 </head>
 <body>
-<h1>Cliques no WhatsApp</h1>
+<h1>Pedidos e cliques no WhatsApp</h1>
 <p class="sub">Contagem de todos os cliques no site (com ou sem anúncio). O dia segue a hora de Maputo.</p>
 
+<section><h2>Pedidos enviados pelo WhatsApp</h2><p class="sub" style="margin:0 0 6px">Tocaram em “Concluir pedido pelo WhatsApp” com o formulário completo.</p><div id="pedido"></div></section>
+<section><h2>Pedidos por peça</h2><div id="pedpecas"></div></section>
+<section><h2>Tentaram concluir com dados em falta</h2><div id="incompleto"></div></section>
 <section><h2>Botão “Tirar dúvida no WhatsApp”</h2><div id="duvida"></div></section>
-<section><h2>Por peça</h2><div id="pecas"></div></section>
+<section><h2>Dúvidas por peça</h2><div id="pecas"></div></section>
 <section><h2>Número do WhatsApp no topo do site</h2><div id="topo"></div></section>
 <button onclick="location.reload()">Actualizar</button>
 
@@ -36,9 +39,10 @@ const linha = (rot, k) => `<div class="row"><span>${rot}</span>${badge(k)}</div>
 const bloco = (id, base) => { document.getElementById(id).innerHTML =
   linha("Hoje", base + "-dia-" + dia(0)) + linha("Ontem", base + "-dia-" + dia(1)) +
   linha("Vindos de anúncio (total)", base + "-anuncio") + linha("Total desde o início", base + "-total"); };
-bloco("duvida", "dezir-mz-duvida"); bloco("topo", "dezir-mz-whatsapp-topo");
+bloco("pedido", "dezir-mz-pedido"); bloco("incompleto", "dezir-mz-pedido-incompleto"); bloco("duvida", "dezir-mz-duvida"); bloco("topo", "dezir-mz-whatsapp-topo");
 fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
   document.getElementById("pecas").innerHTML = (d.pecas||[]).map(p => linha(p.nome, "dezir-mz-duvida-peca-" + slug(p.nome))).join("");
+  document.getElementById("pedpecas").innerHTML = (d.pecas||[]).map(p => linha(p.nome, "dezir-mz-pedido-peca-" + slug(p.nome))).join("");
 });
 </script>
 </body>
