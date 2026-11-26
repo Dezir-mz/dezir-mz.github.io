@@ -124,6 +124,22 @@
         "fotos/orgasm-1.jpg",
         "fotos/orgasm-2.jpg"
       ]
+    },
+    {
+      "nome": "Algemas Íntimas de Pelúcia",
+      "preco": 680,
+      "tamanhos": [
+        "Vermelha",
+        "Preta"
+      ],
+      "rotulo": "Cor",
+      "unidade": "1 par · com chaves",
+      "descricao": "Apimente a relação, quebre a rotina e explore novas experiências a dois. Algemas em metal com forro macio de pelúcia, confortáveis no pulso. Disponíveis em vermelho e preto.",
+      "capa": "fotos/algemas-vermelha.jpg",
+      "fotos": [
+        "fotos/algemas-vermelha.jpg",
+        "fotos/algemas-preta.jpg"
+      ]
     }
   ],
   "pixel": "1900561114691702"
