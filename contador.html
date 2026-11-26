@@ -28,11 +28,11 @@ button{min-height:44px;padding:0 20px;border-radius:99px;border:0;background:#c4
 <script>
 const G = "https://countapi.mileshilliard.com/api/v1/get/";
 const hoje = new Date(Date.now() + 2*3600e3).toISOString().slice(0,10); // hora de Maputo
-const badge = k => `<img alt="0" src="${G}${k}/shield?text=&bgcolor=c4122f&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`;
-const linha = (rot, k) => `<div class="row"><span>${rot}</span>${badge(k)}</div>`;
-const bloco = (id, base) => document.getElementById(id).innerHTML =
-  linha("Hoje", base + "-dia-" + hoje) + linha("Total desde o início", base + "-total");
-bloco("pedido", "dezir-mz-pedido"); bloco("duvida", "dezir-mz-duvida"); bloco("topo", "dezir-mz-whatsapp-topo");
+const badge = (k, t) => `<img alt="0" src="${G}${k}/shield?text=${encodeURIComponent(t)}&bgcolor=c4122f&style=flat&t=${Date.now()}" onerror="this.replaceWith('0')">`;
+const linha = (rot, k, t) => `<div class="row"><span>${rot}</span>${badge(k, t)}</div>`;
+const bloco = (id, base, t) => document.getElementById(id).innerHTML =
+  linha("Hoje", base + "-dia-" + hoje, t) + linha("Total desde o início", base + "-total", t);
+bloco("pedido", "dezir-mz-pedido", "pedidos"); bloco("duvida", "dezir-mz-duvida", "dúvidas"); bloco("topo", "dezir-mz-whatsapp-topo", "cliques");
 </script>
 </body>
 </html>
