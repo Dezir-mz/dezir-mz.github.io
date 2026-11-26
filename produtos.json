@@ -89,6 +89,41 @@
         "fotos/semcostura-4.jpg"
       ],
       "kit": null
+    },
+    {
+      "nome": "Blak Fire & Blak Ice",
+      "preco": 950,
+      "tamanhos": [
+        "Fire 🔥",
+        "Ice ❄️"
+      ],
+      "rotulo": "Versão",
+      "unidade": "1 frasco · 40 ml",
+      "descricao": "Géis íntimos beijáveis e multifuncionais. Blak Fire: calor intenso, sensação quente e estimulante. Blak Ice: efeito gelado e refrescante, uma experiência diferente a cada toque. Ideais para massagens sensuais, carícias e sexo oral ou vaginal. Para homem e mulher.",
+      "capa": "fotos/gel-duo.jpg",
+      "fotos": [
+        "fotos/gel-duo.jpg",
+        "fotos/gel-fire.jpg",
+        "fotos/gel-ice.jpg",
+        "fotos/gel-duo-mesa.jpg",
+        "fotos/gel-fire-mao.jpg",
+        "fotos/gel-ice-mao.jpg"
+      ]
+    },
+    {
+      "nome": "Orgasm's Gel",
+      "preco": 1500,
+      "tamanhos": [
+        "15 ml"
+      ],
+      "rotulo": "Embalagem",
+      "unidade": "1 frasco · 15 ml",
+      "descricao": "Intensifique o prazer e descubra novas sensações. Gel estimulante desenvolvido para potenciar a sensibilidade íntima feminina e favorecer orgasmos múltiplos através de massagens. Sensação de vibração e formigueiro, efeito de aquecimento, sensibilidade intensificada e mais estímulo e prazer durante a intimidade.",
+      "capa": "fotos/orgasm-1.jpg",
+      "fotos": [
+        "fotos/orgasm-1.jpg",
+        "fotos/orgasm-2.jpg"
+      ]
     }
   ],
   "pixel": "1900561114691702"
