@@ -418,6 +418,8 @@ const contar = (tipo, peca) => { const base = "dezir-mz-" + tipo, ks = [base + "
   if (doAnuncio) ks.push(base + "-anuncio");
   ks.forEach(hit); };
 const hit = k => { try { fetch(CNT + k, {mode:"no-cors", keepalive:true, cache:"no-store"}); } catch(e) {} };
+// conta cada visita uma vez por sessão (para o contador: entraram vs concluíram)
+try { if (!sessionStorage.getItem("dzv")) { sessionStorage.setItem("dzv", "1"); setTimeout(() => contar("visita"), 0); } } catch(e) { setTimeout(() => contar("visita"), 0); }
 const toast = m => { let t = $("toast"); if (!t) { t = document.createElement("div"); t.id = "toast"; document.body.appendChild(t); } t.textContent = m; t.classList.remove("show"); void t.offsetWidth; t.classList.add("show"); };
 const pend = {}; let pendSheet = false;
 const pulse = () => { const f = $("fab"); f.classList.remove("pop"); void f.offsetWidth; f.classList.add("pop"); };

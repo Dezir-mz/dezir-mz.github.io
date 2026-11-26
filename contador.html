@@ -20,6 +20,7 @@ button{min-height:44px;padding:0 20px;border-radius:99px;border:0;background:#c4
 <body>
 <h1>Contador Dézir</h1>
 
+<section><h2>Entraram no site</h2><p class="sub">Pessoas que abriram o site (cada pessoa conta uma vez por visita).</p><div id="visita"></div></section>
 <section><h2>Pedidos concluídos</h2><p class="sub">Preencheram tudo e tocaram em “Concluir pedido pelo WhatsApp”.</p><div id="pedido"></div></section>
 <section><h2>Dúvidas no WhatsApp</h2><p class="sub">Tocaram em “Tirar dúvida no WhatsApp”.</p><div id="duvida"></div></section>
 <section><h2>WhatsApp do topo do site</h2><p class="sub">Tocaram no número da loja no topo.</p><div id="topo"></div></section>
@@ -32,7 +33,7 @@ const badge = (k, t) => `<img alt="0" src="${G}${k}/shield?text=${encodeURICompo
 const linha = (rot, k, t) => `<div class="row"><span>${rot}</span>${badge(k, t)}</div>`;
 const bloco = (id, base, t) => document.getElementById(id).innerHTML =
   linha("Hoje", base + "-dia-" + hoje, t) + linha("Total desde o início", base + "-total", t);
-bloco("pedido", "dezir-mz-pedido", "pedidos"); bloco("duvida", "dezir-mz-duvida", "dúvidas"); bloco("topo", "dezir-mz-whatsapp-topo", "cliques");
+bloco("visita", "dezir-mz-visita", "visitas"); bloco("pedido", "dezir-mz-pedido", "pedidos"); bloco("duvida", "dezir-mz-duvida", "dúvidas"); bloco("topo", "dezir-mz-whatsapp-topo", "cliques");
 </script>
 </body>
 </html>
