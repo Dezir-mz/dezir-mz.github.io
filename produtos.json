@@ -140,6 +140,23 @@
         "fotos/algemas-vermelha.jpg",
         "fotos/algemas-preta.jpg"
       ]
+    },
+    {
+      "nome": "Love Lub — Lubrificante Íntimo",
+      "preco": 750,
+      "tamanhos": [
+        "Hot 🔥",
+        "Ice ❄️"
+      ],
+      "rotulo": "Versão",
+      "unidade": "1 bisnaga · 60 g",
+      "descricao": "Mais prazer e conforto na intimidade. Lubrificante à base de água, textura suave e deslizante. Hot: efeito quente. Ice: efeito gelado e refrescante.",
+      "capa": "fotos/lub-duo.jpg",
+      "fotos": [
+        "fotos/lub-duo.jpg",
+        "fotos/lub-hot.jpg",
+        "fotos/lub-ice.jpg"
+      ]
     }
   ],
   "pixel": "1900561114691702"
