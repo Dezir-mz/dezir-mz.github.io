@@ -323,7 +323,7 @@ const ligar = (g, onChange) => { const n = g.children.length, id = g.dataset.g; 
     onChange && onChange(k); }, {passive:true}); };
 
 const abrir = i => {
-  track("ViewContent", {content_name: PECAS[i].nome, content_type: "product", value: PECAS[i].preco || 0, currency: "MZN"});
+  contar("viu-peca"); track("ViewContent", {content_name: PECAS[i].nome, content_type: "product", value: PECAS[i].preco || 0, currency: "MZN"});
   pendSheet = false;
   aberta = i; cur = 0; qtd = 1; tam = tams(PECAS[i]).length === 1 ? tams(PECAS[i])[0] : ""; fmt = "un";
   const p = PECAS[i], sl = slidesDe(p), n = sl.length;
