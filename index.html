@@ -197,11 +197,6 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 .grid .card .see{min-height:42px;width:100%;font-size:14px}
 .grid .card .step{min-height:42px}
 @media(max-width:600px){.grid{gap:14px 10px}.grid .card h3{font-size:16px}.grid .card .price{font-size:16px}.grid .card small{font-size:12px}.grid .card .qsz{min-width:30px;height:30px;font-size:12px}.grid .card .see{min-height:40px;font-size:13px;padding:0 4px}}
-/* peça vinda do anúncio */
-.grid .card.alvo{outline:3px solid #1f9d55;outline-offset:2px;animation:alvo 1.1s ease-in-out 4}
-@keyframes alvo{50%{box-shadow:0 0 0 9px rgba(31,157,85,.28)}}
-.alvo-selo{position:absolute;left:8px;right:8px;bottom:8px;z-index:3;background:#1f9d55;color:#fff;font:700 12px/1.2 system-ui,sans-serif;padding:7px 8px;border-radius:99px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
-@media(prefers-reduced-motion:reduce){.grid .card.alvo{animation:none}}
 /* estímulos de compra — discretos */
 .cta{position:relative;overflow:hidden;min-height:60px;padding:0 40px;font-size:18px;box-shadow:0 8px 24px rgba(196,18,47,.45)}
 .cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 3.6s ease-in-out infinite}
@@ -392,10 +387,9 @@ fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
   if (dp) { $("bbImg").src = capa(dp); $("bbNome").textContent = pref(dp) + dp.nome; $("bbPreco").textContent = mt(dp.preco) + " · paga quando receber"; }
   if (achada > -1) doAnuncio = true; // veio do anúncio: entra no site normal, só ganha a barra em baixo
   revelar();
-  // peça do anúncio: contorno verde + selo e a página desce até ela
+  // peça do anúncio: a página desce até ela
   if (achada > -1) { const el = $("track").children[achada];
-    if (el) { el.classList.add("alvo", "in"); const pic = el.querySelector(".pic");
-      if (pic) pic.insertAdjacentHTML("beforeend", '<span class="alvo-selo">✓ Peça do anúncio</span>');
+    if (el) { el.classList.add("in");
       const ir = () => el.scrollIntoView({behavior:"smooth", block:"center"});
       setTimeout(ir, 350); setTimeout(ir, 1200); } }
 }).catch(() => { $("msg").textContent = "Não foi possível carregar as peças. Actualize a página."; renderPedido(); });
@@ -437,7 +431,7 @@ document.addEventListener("click", e => {
   if (o && !t.closest(".slides")) { abrir(+o.dataset.open); return; }
   if (o && t.closest(".slides")) { abrir(+o.dataset.open); }
 });
-const quickAdd = (i, tt) => { const k = i + "-" + tt + "-un"; pedido[k] = {i, m:0, t:tt, f:"un", q:(pedido[k]?.q||0) + 1}; renderPedido(); pulse(); contar("carrinho"); toast("Adicionado ao carrinho ✓ · " + (PECAS[i].rotulo ? "" : "Tam. ") + tt); track("AddToCart", {content_name: PECAS[i].nome, value: PECAS[i].preco || 0, currency: "MZN"}); };
+const quickAdd = (i, tt) => { const k = i + "-" + tt + "-un"; pedido[k] = {i, m:0, t:tt, f:"un", q:(pedido[k]?.q||0) + 1}; renderPedido(); pulse(); contar("carrinho"); toast("Adicionado ao carrinho ✓ · " + (PECAS[i].rotulo ? "" : "Tam. ") + tt); track("AddToCart", {content_name: PECAS[i].nome, value: PECAS[i].preco || 0, currency: "MZN"}); setTimeout(() => $("pedido").scrollIntoView({behavior:"smooth"}), 450); };
 // contador próprio de cliques (dúvida / WhatsApp) — vê os números em /contador.html
 const CNT = "https://countapi.mileshilliard.com/api/v1/hit/";
 const slug = x => String(x).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
