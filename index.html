@@ -197,6 +197,10 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 .grid .card .see{min-height:42px;width:100%;font-size:14px}
 .grid .card .step{min-height:42px}
 @media(max-width:600px){.grid{gap:14px 10px}.grid .card h3{font-size:16px}.grid .card .price{font-size:16px}.grid .card small{font-size:12px}.grid .card .qsz{min-width:30px;height:30px;font-size:12px}.grid .card .see{min-height:40px;font-size:13px;padding:0 4px}}
+/* peça vinda do anúncio: só um contorno fino */
+.grid .card.alvo{outline:2px solid #1f9d55;outline-offset:3px;animation:alvo 1.2s ease-in-out 3}
+@keyframes alvo{50%{box-shadow:0 0 0 7px rgba(31,157,85,.22)}}
+@media(prefers-reduced-motion:reduce){.grid .card.alvo{animation:none}}
 /* estímulos de compra — discretos */
 .cta{position:relative;overflow:hidden;min-height:60px;padding:0 40px;font-size:18px;box-shadow:0 8px 24px rgba(196,18,47,.45)}
 .cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 3.6s ease-in-out infinite}
@@ -389,7 +393,7 @@ fetch("produtos.json", {cache:"no-store"}).then(r => r.json()).then(d => {
   revelar();
   // peça do anúncio: a página desce até ela
   if (achada > -1) { const el = $("track").children[achada];
-    if (el) { el.classList.add("in");
+    if (el) { el.classList.add("in", "alvo");
       const ir = () => el.scrollIntoView({behavior:"smooth", block:"center"});
       setTimeout(ir, 350); setTimeout(ir, 1200); } }
 }).catch(() => { $("msg").textContent = "Não foi possível carregar as peças. Actualize a página."; renderPedido(); });
