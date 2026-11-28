@@ -246,7 +246,7 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 #provas .hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 max(4vw,14px);margin-bottom:10px}
 #provas h2{font-size:24px;margin:0;text-align:left}
 #provas .hd button{border:0;background:none;color:var(--red);font:600 13px system-ui,sans-serif;cursor:pointer;white-space:nowrap;padding:6px 0}
-#provas .fila{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px max(4vw,14px) 6px;scrollbar-width:none}
+#provas .fila{display:flex;align-items:flex-start;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px max(4vw,14px) 6px;scrollbar-width:none}
 #provas .fila::-webkit-scrollbar{display:none}
 #provas .cm{flex:0 0 min(72%,280px);scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
 #provas .cm p{margin:0;font-size:13.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
@@ -255,6 +255,16 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 #provas .lk{border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 9px;font:600 12px system-ui,sans-serif;color:var(--soft);cursor:pointer}
 #provas .lk.on{color:var(--red);border-color:#f1c4cc;background:#fff5f6}
 #provas .add{flex:0 0 150px;scroll-snap-align:start;border:1.5px dashed #d8cfc9;border-radius:12px;background:none;color:var(--ink);font:600 13px/1.35 system-ui,sans-serif;cursor:pointer;padding:10px}
+#provas .cm .ft2{width:calc(100% + 24px);margin:-10px -12px 2px;height:150px;object-fit:cover;border-radius:12px 12px 0 0;display:block;cursor:zoom-in;background:#f3eeea}
+#cmpop .fto{display:flex;align-items:center;gap:10px}
+#cmpop .fto label{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:42px;border:1.5px dashed #d8cfc9;border-radius:10px;font:600 13.5px system-ui,sans-serif;cursor:pointer;color:var(--ink)}
+#cmpop .fto input{position:absolute;left:-9999px}
+#cmpop .fto img{width:42px;height:42px;object-fit:cover;border-radius:8px;display:none}
+#cmpop .fto .rm{display:none;min-height:30px;padding:0 10px;border:1px solid var(--line);background:#fff;font-size:12px}
+#cmpop .fto.tem img,#cmpop .fto.tem .rm{display:block}
+#cmpop .dica2{font-size:12px;color:var(--soft);margin:-4px 0 0}
+#fotoZoom{position:fixed;inset:0;z-index:80;background:rgba(13,11,11,.88);display:none;align-items:center;justify-content:center;padding:16px}
+#fotoZoom.open{display:flex}#fotoZoom img{max-width:100%;max-height:100%;border-radius:8px}
 #provas .vazio{padding:0 max(4vw,14px);font-size:13px;color:var(--soft)}
 #cmpop{position:fixed;inset:0;z-index:72;display:none;align-items:flex-end;justify-content:center;background:rgba(13,11,11,.35)}
 #cmpop.open{display:flex}
@@ -360,11 +370,14 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 
 <a class="fab" id="fab" href="#pedido" aria-label="Concluir pedido"><span class="fabtxt"><b>Concluir pedido</b><small id="fabT"></small></span><span class="ball"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.2"/><circle cx="9.5" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg><i id="fabN">0</i></span></a>
 
+<div id="fotoZoom"><img alt="Foto da cliente"></div>
 <div id="cmpop" aria-hidden="true"><form id="cmForm" novalidate>
   <h3>Deixe o seu comentário</h3>
   <label>O seu nome<input id="cmNome" maxlength="40" autocomplete="given-name" placeholder="Ex.: Ana"></label>
   <label>Bairro (opcional)<input id="cmBairro" maxlength="40" placeholder="Ex.: Matola, Machava"></label>
   <label>Comentário<textarea id="cmTexto" maxlength="300" placeholder="Como foi a entrega? Gostou da peça?"></textarea></label>
+  <div class="fto" id="cmFto"><label for="cmFoto">📷 Adicionar foto ou print (opcional)</label><input type="file" id="cmFoto" accept="image/*"><img id="cmPrev" alt=""><button type="button" class="rm" id="cmRm">Tirar</button></div>
+  <p class="dica2">Foto das peças que recebeu ou print da conversa. Se for print, pode esconder o seu número.</p>
   <input class="hp" id="cmHp" tabindex="-1" autocomplete="off" aria-hidden="true">
   <p class="msg" id="cmMsg"></p>
   <div class="bts"><button type="button" class="cx" id="cmFechar">Cancelar</button><button type="submit" class="ev" id="cmEnviar">Enviar</button></div>
@@ -591,10 +604,12 @@ const g = id => document.getElementById(id);
 const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const gosto = id => { try { return localStorage.getItem("dzlk" + id) === "1"; } catch(x) { return false; } };
 const num = r => r && (r.value ?? r.count ?? r.hits);
-const cartao = c => `<div class="cm"><p>${e(c.texto)}</p><div class="ft"><span><b>${e(c.nome)}</b>${c.bairro ? " · " + e(c.bairro) : ""}</span><button type="button" class="lk${gosto(c.id) ? " on" : ""}" data-lk="${c.id}">♥ <span id="lk${c.id}"></span></button></div></div>`;
+const ST = "https://agtvlxaapewhjbntlilw.supabase.co/storage/v1/object/";
+const okFoto = u => typeof u === "string" && u.startsWith(ST + "public/comentarios/");
+const cartao = c => `<div class="cm">${okFoto(c.foto) ? `<img class="ft2" loading="lazy" src="${e(c.foto)}" alt="Foto de ${e(c.nome)}">` : ""}<p>${e(c.texto)}</p><div class="ft"><span><b>${e(c.nome)}</b>${c.bairro ? " · " + e(c.bairro) : ""}</span><button type="button" class="lk${gosto(c.id) ? " on" : ""}" data-lk="${c.id}">♥ <span id="lk${c.id}"></span></button></div></div>`;
 const addBtn = `<button type="button" class="add" data-cm="1">+ Já recebeu?<br>Deixe o seu comentário</button>`;
-const carregar = () => fetch(SB + "?select=id,nome,bairro,texto&aprovado=eq.true&order=criado.desc&limit=30", {headers:{apikey:KEY}})
-  .then(r => r.ok ? r.json() : Promise.reject(r.status))
+const lista = cols => fetch(SB + "?select=" + cols + "&aprovado=eq.true&order=criado.desc&limit=30", {headers:{apikey:KEY}}).then(r => r.ok ? r.json() : Promise.reject(r.status));
+const carregar = () => lista("id,nome,bairro,texto,foto").catch(() => lista("id,nome,bairro,texto"))
   .then(l => { g("cmFila").innerHTML = (l.length ? l.map(cartao).join("") : `<p class="vazio">Seja a primeira a comentar 💕</p>`) + addBtn;
     l.forEach(c => fetch(LK + "get/dezir-mz-like-" + c.id).then(r => r.json()).then(r => { const n = num(r); if (n && g("lk"+c.id)) g("lk"+c.id).textContent = n; }).catch(() => {})); })
   .catch(() => { g("cmFila").innerHTML = addBtn; });
@@ -606,11 +621,30 @@ g("cmFechar").addEventListener("click", fechar);
 g("cmpop").addEventListener("click", ev => { if (ev.target.id === "cmpop") fechar(); });
 g("cmFila").addEventListener("click", ev => {
   if (ev.target.closest("[data-cm]")) return abrir();
+  if (ev.target.classList.contains("ft2")) { g("fotoZoom").querySelector("img").src = ev.target.src; g("fotoZoom").classList.add("open"); return; }
   const b = ev.target.closest("[data-lk]"); if (!b || b.classList.contains("on")) return;
   const id = b.dataset.lk; b.classList.add("on"); try { localStorage.setItem("dzlk" + id, "1"); } catch(x) {}
   const s = g("lk"+id); s.textContent = (parseInt(s.textContent) || 0) + 1;
   fetch(LK + "hit/dezir-mz-like-" + id).then(r => r.json()).then(r => { const n = num(r); if (n) s.textContent = n; }).catch(() => {});
 });
+g("fotoZoom").addEventListener("click", () => g("fotoZoom").classList.remove("open"));
+let foto = null;
+const reduzir = f => new Promise((ok, no) => { const u = URL.createObjectURL(f), i = new Image();
+  i.onload = () => { const m = 1280, k = Math.min(1, m / Math.max(i.width, i.height)), c = document.createElement("canvas");
+    c.width = Math.round(i.width * k); c.height = Math.round(i.height * k); c.getContext("2d").drawImage(i, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(u); c.toBlob(b => b ? ok(b) : no(), "image/jpeg", .82); };
+  i.onerror = () => { URL.revokeObjectURL(u); no(); }; i.src = u; });
+const semFoto = () => { foto = null; g("cmFoto").value = ""; g("cmFto").classList.remove("tem"); g("cmPrev").removeAttribute("src"); };
+g("cmFoto").addEventListener("change", () => { const f = g("cmFoto").files[0]; if (!f) return semFoto();
+  if (!/^image\//.test(f.type)) { g("cmMsg").textContent = "Escolha uma imagem."; return semFoto(); }
+  g("cmMsg").textContent = "A preparar a foto…";
+  reduzir(f).then(b => { foto = b; g("cmPrev").src = URL.createObjectURL(b); g("cmFto").classList.add("tem"); g("cmMsg").textContent = ""; })
+    .catch(() => { g("cmMsg").textContent = "Não consegui abrir esta foto. Tente outra."; semFoto(); }); });
+g("cmRm").addEventListener("click", semFoto);
+const subir = () => { if (!foto) return Promise.resolve(null);
+  const nomeF = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10) + ".jpg";
+  return fetch(ST + "comentarios/" + nomeF, {method:"POST", headers:{apikey:KEY, Authorization:"Bearer " + KEY, "Content-Type":"image/jpeg", "x-upsert":"false"}, body: foto})
+    .then(r => { if (!r.ok) throw "foto"; return ST + "public/comentarios/" + nomeF; }); };
 g("cmForm").addEventListener("submit", ev => { ev.preventDefault();
   const nome = g("cmNome").value.trim(), bairro = g("cmBairro").value.trim(), texto = g("cmTexto").value.trim();
   if (g("cmHp").value) return fechar();
@@ -618,12 +652,12 @@ g("cmForm").addEventListener("submit", ev => { ev.preventDefault();
   if (texto.length < 3) { g("cmMsg").textContent = "Escreva o seu comentário."; return; }
   try { const t = +localStorage.getItem("dzcm") || 0; if (Date.now() - t < 60000) { g("cmMsg").textContent = "Já enviou um comentário agora mesmo. Obrigada!"; return; } } catch(x) {}
   g("cmEnviar").disabled = true; g("cmMsg").textContent = "A enviar…";
-  fetch(SB, {method:"POST", headers:{apikey:KEY, "Content-Type":"application/json", Prefer:"return=minimal"}, body: JSON.stringify({nome, bairro: bairro || null, texto})})
-    .then(r => { if (!r.ok) throw r.status;
+  subir().then(url => fetch(SB, {method:"POST", headers:{apikey:KEY, "Content-Type":"application/json", Prefer:"return=minimal"}, body: JSON.stringify(url ? {nome, bairro: bairro || null, texto, foto: url} : {nome, bairro: bairro || null, texto})}))
+    .then(r => { if (!r.ok) throw r.status; semFoto();
       try { localStorage.setItem("dzcm", Date.now()); } catch(x) {}
       g("cmForm").reset(); g("cmMsg").textContent = "Obrigada! 💕 O seu comentário aparece aqui depois de aprovado.";
       setTimeout(fechar, 2600); })
-    .catch(() => { g("cmMsg").textContent = "Não foi possível enviar. Tente de novo daqui a pouco."; })
+    .catch(x => { g("cmMsg").textContent = x === "foto" ? "Não foi possível enviar a foto. Tente de novo ou envie sem foto." : "Não foi possível enviar. Tente de novo daqui a pouco."; })
     .finally(() => { g("cmEnviar").disabled = false; });
 });
 }
