@@ -241,6 +241,35 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 .ctasub{margin-top:6px!important;font-size:13px!important}
 @media(max-width:600px){.trust{grid-template-columns:repeat(3,minmax(0,1fr))!important}.trust div{padding:10px 4px!important}.trust div+div{border-left:1px solid var(--line)!important;border-top:0!important}.trust strong{font-size:14px!important;line-height:1.15}.trust small{font-size:11px!important;line-height:1.3;display:block;margin-top:3px}}
 #pecas{padding-top:22px}
+/* quem já recebeu (comentários das clientes) */
+#provas{padding:22px 0 18px;background:var(--tint)}
+#provas .hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 max(4vw,14px);margin-bottom:10px}
+#provas h2{font-size:24px;margin:0;text-align:left}
+#provas .hd button{border:0;background:none;color:var(--red);font:600 13px system-ui,sans-serif;cursor:pointer;white-space:nowrap;padding:6px 0}
+#provas .fila{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px max(4vw,14px) 6px;scrollbar-width:none}
+#provas .fila::-webkit-scrollbar{display:none}
+#provas .cm{flex:0 0 min(72%,280px);scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+#provas .cm p{margin:0;font-size:13.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+#provas .cm .ft{display:flex;justify-content:space-between;align-items:center;margin-top:auto;font-size:12px;color:var(--soft)}
+#provas .cm .ft b{color:var(--ink);font-weight:600}
+#provas .lk{border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 9px;font:600 12px system-ui,sans-serif;color:var(--soft);cursor:pointer}
+#provas .lk.on{color:var(--red);border-color:#f1c4cc;background:#fff5f6}
+#provas .add{flex:0 0 150px;scroll-snap-align:start;border:1.5px dashed #d8cfc9;border-radius:12px;background:none;color:var(--ink);font:600 13px/1.35 system-ui,sans-serif;cursor:pointer;padding:10px}
+#provas .vazio{padding:0 max(4vw,14px);font-size:13px;color:var(--soft)}
+#cmpop{position:fixed;inset:0;z-index:72;display:none;align-items:flex-end;justify-content:center;background:rgba(13,11,11,.35)}
+#cmpop.open{display:flex}
+#cmpop form{width:min(480px,100%);max-width:none;margin:0;border-radius:14px 14px 0 0;border:0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));gap:10px;animation:subir .22s ease}
+#cmpop h3{font-size:22px;margin:0}
+#cmpop label{font-size:13px}
+#cmpop input,#cmpop textarea{font-size:16px}
+#cmpop textarea{min-height:76px;resize:vertical;font-family:system-ui,-apple-system,Roboto,sans-serif;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);outline:none}
+#cmpop textarea:focus{border-color:var(--ink)}
+#cmpop .bts{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
+#cmpop button{min-height:42px;border-radius:99px;font:600 14px system-ui,sans-serif;cursor:pointer}
+#cmpop .cx{background:#fff;border:1px solid var(--line);color:var(--ink)}
+#cmpop .ev{background:var(--red);border:1px solid var(--red);color:#fff}
+#cmpop .msg{font-size:13px;color:var(--soft);margin:0;min-height:0}
+#cmpop .hp{position:absolute;left:-9999px}
 /* estímulos de compra — discretos */
 .cta{position:relative;overflow:hidden;min-height:60px;padding:0 40px;font-size:18px;box-shadow:0 8px 24px rgba(196,18,47,.45)}
 .cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 3.6s ease-in-out infinite}
@@ -303,6 +332,10 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
   <p class="msg" id="msg">A carregar as peças…</p>
 </div></section>
 
+<section id="provas" aria-label="Comentários de clientes">
+  <div class="hd"><h2>Quem já recebeu ⭐</h2><button type="button" id="cmAbrir">+ Comentar</button></div>
+  <div class="fila" id="cmFila"><p class="vazio">A carregar comentários…</p></div>
+</section>
 <section class="band order" id="pedido"><div class="wrap">
   <h2>Concluir pedido</h2>
   <form id="form" novalidate>
@@ -327,6 +360,15 @@ footer b{font-family:"Cormorant Garamond",Georgia,serif;color:#fff;font-weight:5
 
 <a class="fab" id="fab" href="#pedido" aria-label="Concluir pedido"><span class="fabtxt"><b>Concluir pedido</b><small id="fabT"></small></span><span class="ball"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 8H6.2"/><circle cx="9.5" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg><i id="fabN">0</i></span></a>
 
+<div id="cmpop" aria-hidden="true"><form id="cmForm" novalidate>
+  <h3>Deixe o seu comentário</h3>
+  <label>O seu nome<input id="cmNome" maxlength="40" autocomplete="given-name" placeholder="Ex.: Ana"></label>
+  <label>Bairro (opcional)<input id="cmBairro" maxlength="40" placeholder="Ex.: Matola, Machava"></label>
+  <label>Comentário<textarea id="cmTexto" maxlength="300" placeholder="Como foi a entrega? Gostou da peça?"></textarea></label>
+  <input class="hp" id="cmHp" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <p class="msg" id="cmMsg"></p>
+  <div class="bts"><button type="button" class="cx" id="cmFechar">Cancelar</button><button type="submit" class="ev" id="cmEnviar">Enviar</button></div>
+</form></div>
 <div id="addpop" aria-hidden="true"><div class="box" role="dialog" aria-label="Adicionado ao carrinho"><div class="ok"><img id="apImg" alt=""><div><b>✓ Adicionado ao carrinho</b><span id="apNome"></span><small id="apTot"></small></div></div><div class="bts"><button type="button" class="cont" id="apCont">Continuar a escolher</button><button type="button" class="fim" id="apFim">Concluir pedido</button></div></div></div>
 <div class="buybar" id="buybar" aria-hidden="true"><img id="bbImg" alt=""><span class="t"><b id="bbNome"></b><small id="bbPreco"></small></span><button type="button" id="bbBtn">Comprar agora</button></div>
 
@@ -538,6 +580,51 @@ $("sendBtn").addEventListener("click", e => {
   const ks2 = Object.keys(pedido), val = ks2.reduce((a,k) => a + linha(pedido[k]).v, 0);
   contar("pedido"); [...new Set(ks2.map(k => PECAS[pedido[k].i].nome))].forEach(n => hit("dezir-mz-pedido-peca-" + slug(n)));
   track("Purchase", {value: val, currency: "MZN", num_items: ks2.reduce((a,k) => a + pedido[k].q, 0), contents: ks2.map(k => ({id: PECAS[pedido[k].i].nome, quantity: pedido[k].q}))});
+});
+}
+
+// ===== Quem já recebeu: comentários (Supabase, só aparecem depois de aprovados) =====
+{
+const SB = "https://agtvlxaapewhjbntlilw.supabase.co/rest/v1/comentarios", KEY = "sb_publishable_CWyj9iKdTcx0q6eNBZUWlg_LR0a-dz_";
+const LK = "https://countapi.mileshilliard.com/api/v1/";
+const g = id => document.getElementById(id);
+const e = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gosto = id => { try { return localStorage.getItem("dzlk" + id) === "1"; } catch(x) { return false; } };
+const num = r => r && (r.value ?? r.count ?? r.hits);
+const cartao = c => `<div class="cm"><p>${e(c.texto)}</p><div class="ft"><span><b>${e(c.nome)}</b>${c.bairro ? " · " + e(c.bairro) : ""}</span><button type="button" class="lk${gosto(c.id) ? " on" : ""}" data-lk="${c.id}">♥ <span id="lk${c.id}"></span></button></div></div>`;
+const addBtn = `<button type="button" class="add" data-cm="1">+ Já recebeu?<br>Deixe o seu comentário</button>`;
+const carregar = () => fetch(SB + "?select=id,nome,bairro,texto&aprovado=eq.true&order=criado.desc&limit=30", {headers:{apikey:KEY}})
+  .then(r => r.ok ? r.json() : Promise.reject(r.status))
+  .then(l => { g("cmFila").innerHTML = (l.length ? l.map(cartao).join("") : `<p class="vazio">Seja a primeira a comentar 💕</p>`) + addBtn;
+    l.forEach(c => fetch(LK + "get/dezir-mz-like-" + c.id).then(r => r.json()).then(r => { const n = num(r); if (n && g("lk"+c.id)) g("lk"+c.id).textContent = n; }).catch(() => {})); })
+  .catch(() => { g("cmFila").innerHTML = addBtn; });
+carregar();
+const abrir = () => { g("cmMsg").textContent = ""; g("cmpop").classList.add("open"); setTimeout(() => g("cmNome").focus(), 150); };
+const fechar = () => g("cmpop").classList.remove("open");
+g("cmAbrir").addEventListener("click", abrir);
+g("cmFechar").addEventListener("click", fechar);
+g("cmpop").addEventListener("click", ev => { if (ev.target.id === "cmpop") fechar(); });
+g("cmFila").addEventListener("click", ev => {
+  if (ev.target.closest("[data-cm]")) return abrir();
+  const b = ev.target.closest("[data-lk]"); if (!b || b.classList.contains("on")) return;
+  const id = b.dataset.lk; b.classList.add("on"); try { localStorage.setItem("dzlk" + id, "1"); } catch(x) {}
+  const s = g("lk"+id); s.textContent = (parseInt(s.textContent) || 0) + 1;
+  fetch(LK + "hit/dezir-mz-like-" + id).then(r => r.json()).then(r => { const n = num(r); if (n) s.textContent = n; }).catch(() => {});
+});
+g("cmForm").addEventListener("submit", ev => { ev.preventDefault();
+  const nome = g("cmNome").value.trim(), bairro = g("cmBairro").value.trim(), texto = g("cmTexto").value.trim();
+  if (g("cmHp").value) return fechar();
+  if (nome.length < 2) { g("cmMsg").textContent = "Escreva o seu nome."; return; }
+  if (texto.length < 3) { g("cmMsg").textContent = "Escreva o seu comentário."; return; }
+  try { const t = +localStorage.getItem("dzcm") || 0; if (Date.now() - t < 60000) { g("cmMsg").textContent = "Já enviou um comentário agora mesmo. Obrigada!"; return; } } catch(x) {}
+  g("cmEnviar").disabled = true; g("cmMsg").textContent = "A enviar…";
+  fetch(SB, {method:"POST", headers:{apikey:KEY, "Content-Type":"application/json", Prefer:"return=minimal"}, body: JSON.stringify({nome, bairro: bairro || null, texto})})
+    .then(r => { if (!r.ok) throw r.status;
+      try { localStorage.setItem("dzcm", Date.now()); } catch(x) {}
+      g("cmForm").reset(); g("cmMsg").textContent = "Obrigada! 💕 O seu comentário aparece aqui depois de aprovado.";
+      setTimeout(fechar, 2600); })
+    .catch(() => { g("cmMsg").textContent = "Não foi possível enviar. Tente de novo daqui a pouco."; })
+    .finally(() => { g("cmEnviar").disabled = false; });
 });
 }
 </script>
