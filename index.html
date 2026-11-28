@@ -655,7 +655,7 @@ g("cmForm").addEventListener("submit", ev => { ev.preventDefault();
   subir().then(url => fetch(SB, {method:"POST", headers:{apikey:KEY, "Content-Type":"application/json", Prefer:"return=minimal"}, body: JSON.stringify(url ? {nome, bairro: bairro || null, texto, foto: url} : {nome, bairro: bairro || null, texto})}))
     .then(r => { if (!r.ok) throw r.status; semFoto();
       try { localStorage.setItem("dzcm", Date.now()); } catch(x) {}
-      g("cmForm").reset(); g("cmMsg").textContent = "Obrigada! 💕 O seu comentário aparece aqui depois de aprovado.";
+      g("cmForm").reset(); g("cmMsg").textContent = "Obrigada! 💕 O seu comentário foi enviado."; setTimeout(carregar, 800);
       setTimeout(fechar, 2600); })
     .catch(x => { g("cmMsg").textContent = x === "foto" ? "Não foi possível enviar a foto. Tente de novo ou envie sem foto." : "Não foi possível enviar. Tente de novo daqui a pouco."; })
     .finally(() => { g("cmEnviar").disabled = false; });
